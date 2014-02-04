@@ -1,0 +1,1 @@
+from bangoo.plugins.blog.tests.admin import *
