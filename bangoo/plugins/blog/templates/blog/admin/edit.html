@@ -1,0 +1,71 @@
+{% extends 'admin/base.html' %}
+{% load bootstrap_form_fields %}
+{% load i18n %}
+{% load navigation_tags %}
+{% load static %}
+
+{% block head %}
+    {{ block.super }}
+    <link href="{% theme_static 'redactor/redactor.css' %}" rel="stylesheet" type="text/css">
+    <style>
+        .padding-fix {
+            padding-top: 24px;
+        }
+
+        .operations {
+            left: 50%;
+            right: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+
+    <script src="{% theme_static 'redactor/redactor.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'blog/post.js' %}" type="text/javascript"></script>
+    <script>
+        angular.module('bangoo.blog.post').factory('redactorOptions', function(){
+            return {
+                buttonSource: true,
+                paragraphize: false,
+                replaceDivs: false
+            }
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div ng-app="bangoo.blog.post" ng-cloak>
+        <form ng-controller="BangooBlogPostController as post" novalidate data-url="{% url 'api:post-api' post_id %}">
+            <div class="row">
+                <div class="col-md-10">
+                    {% bootstrap_field form.title 'data.title' 'errors.title'%}
+                    {% redactor_field form.content 'data.content' 'errors.content' %}
+                    {% redactor_field form.preview 'data.preview' 'errors.preview' %}
+                </div>
+                <div class="col-md-2">
+                    <div class="btn-group padding-fix operations">
+                        <button class="btn btn-primary" ng-click="post.submit('publish', $event)">{% trans 'Publish' %}</button>
+                        <button class="btn btn-default" ng-click="post.submit('draft', $event)">{% trans 'Save as draft' %}</button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    {% bootstrap_field form.tags 'data.tags' 'errors.tags' %}
+                </div>
+                <div class="col-md-2">
+                    {% bootstrap_field form.assets 'data.assets' 'errors.assets' %}
+                </div>
+                <div class="col-md-2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {% trans 'Existing assets' %}
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-show="!data.asset_set.length">{% trans 'No files' %}</li>
+                            <li class="list-group-item" ng-repeat="assetName in data.asset_set">
+                                [[ assetName ]]
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
