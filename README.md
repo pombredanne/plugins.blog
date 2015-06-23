@@ -1,6 +1,6 @@
 # plugins.blog
 
-Blog plugin for bangoocms/bangoo CMS
+Blog plugin for [bangoo](https://github.com/bangoocms/bangoo) CMS
 
 # Installation
 
