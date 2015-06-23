@@ -3,6 +3,7 @@
 import json
 
 from django.shortcuts import get_object_or_404
+from restify.authorization import DjangoPermissions
 from restify.http import status
 from restify.http.response import ApiResponse
 from restify.resource import ModelResource
@@ -15,6 +16,7 @@ class PostResource(ModelResource):
     class Meta:
         resource_name = 'post-api'
         serializer = PostSerializer
+        authorization = DjangoPermissions(get='blog.add_post', post='blog.add_post')
 
     def get(self, request, post_id):
         if post_id == 'list':
